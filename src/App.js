@@ -1,6 +1,7 @@
 import { useState } from "react";
+import rocketImg from './assets/rocket.png'
 
-function App(){
+function App() {
 
     const questions = [
         {
@@ -66,55 +67,73 @@ function App(){
                 { answerText: 'Jorge Luis Borges', isCorrect: false },
             ],
         },
-    ];    
+    ];
 
+    const [startPage, setStartPage] = useState(true)
     const [question, setQuestion] = useState(0)
     const [userScore, setUserScore] = useState(0)
     const [showScore, setShowScore] = useState(false)
 
-    function handleButtonClick(isCorrect){
+    function handleButtonClick(isCorrect) {
         const nextQuestion = question + 1
 
         isCorrect && setUserScore(userScore + 1)
 
-        if(nextQuestion < questions.length){
+        if (nextQuestion < questions.length) {
             setQuestion(nextQuestion)
         } else {
             setShowScore(true)
         }
     }
 
-    function restartGame(){
+    function restartGame() {
         setQuestion(0)
         setUserScore(0)
         setShowScore(false)
+        setStartPage(true)
+    }
+
+    function handleStartButton(){
+        setStartPage(false)
     }
 
     return (
-        <div className="h-screen bg-purple-900 flex justify-center items-center">
+        <>
             {
-                showScore ? (
-                    <main className="bg-purple-400 h-auto p-5 rounded-2xl flex justify-center items-center flex-col gap-14 text-center w-4/6 lg:w-5/12">
-                        <h2 className="text-white font-bold text-4xl">Você acertou {userScore} de {questions.length} questões</h2>
-                        <button onClick={restartGame} className="w-11/12 bg-purple-700 rounded-lg text-white py-2 hover:opacity-80">Reiniciar</button>
-                    </main>
-                ) : (
-                    <main className="bg-purple-400 h-auto p-5 rounded-2xl flex flex-col gap-5 lg:w-5/12 lg:flex-row">
-                    <div className="question-section flex flex-col gap-5 text-white font-bold w-full">
-                        <p className="text-3xl">Questão {question + 1}<span className="text-sm">/{questions.length}</span></p>
-                        <p className="text-2xl max-w-72">{questions[question].questionText}</p>
+                startPage ? (
+                    <div className="h-screen bg-purple-900 flex justify-center items-center flex-col gap-10">
+                        <img className="w-40" src={rocketImg} alt="logo do inicio de foguete"/>
+                        <h1 className="text-white font-bold text-5xl">Bem vindo ao Quiz Games</h1>
+                        <button className="bg-purple-700 rounded-lg text-white py-2 hover:opacity-80 w-1/2" onClick={handleStartButton}>Jogar</button>
                     </div>
-
-                    <div className="answer-section flex flex-col justify-around items-center lg:items-end w-full gap-5">
+                ) : (
+                    <div className="h-screen bg-purple-900 flex justify-center items-center">
                         {
-                            questions[question].answerOptions.map(option => <button onClick={() => handleButtonClick(option.isCorrect)} className="w-11/12 bg-purple-700 rounded-lg text-white py-2 hover:opacity-80">{option.answerText}</button>)
+                            showScore ? (
+                                <main className="bg-purple-400 h-auto p-5 rounded-2xl flex justify-center items-center flex-col gap-14 text-center w-4/6 lg:w-5/12">
+                                    <h2 className="text-white font-bold text-4xl">Você acertou {userScore} de {questions.length} questões</h2>
+                                    <button onClick={restartGame} className="w-11/12 bg-purple-700 rounded-lg text-white py-2 hover:opacity-80">Reiniciar</button>
+                                </main>
+                            ) : (
+                                <main className="bg-purple-400 h-auto p-5 rounded-2xl flex flex-col gap-5 lg:w-5/12 lg:flex-row">
+                                    <div className="question-section flex flex-col gap-5 text-white font-bold w-full">
+                                        <p className="text-3xl">Questão {question + 1}<span className="text-sm">/{questions.length}</span></p>
+                                        <p className="text-2xl max-w-72">{questions[question].questionText}</p>
+                                    </div>
+
+                                    <div className="answer-section flex flex-col justify-around items-center lg:items-end w-full gap-5">
+                                        {
+                                            questions[question].answerOptions.map(option => <button onClick={() => handleButtonClick(option.isCorrect)} className="w-11/12 bg-purple-700 rounded-lg text-white py-2 hover:opacity-80">{option.answerText}</button>)
+                                        }
+                                    </div>
+
+                                </main>
+                            )
                         }
                     </div>
-
-                    </main>
                 )
             }
-        </div>
+        </>
     )
 }
 
